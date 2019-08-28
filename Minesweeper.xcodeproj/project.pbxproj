@@ -15,6 +15,10 @@
 		3C8B948F23160C4200719456 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C8B948D23160C4200719456 /* LaunchScreen.storyboard */; };
 		3C8B949723160C5A00719456 /* Minesweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B949623160C5A00719456 /* Minesweeper.swift */; };
 		3CD9D0572316B7610092A18C /* MinesweeperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9D0562316B7610092A18C /* MinesweeperUnitTests.swift */; };
+		3CD9D06023170AF80092A18C /* MinesweeperCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9D05F23170AF80092A18C /* MinesweeperCollectionView.swift */; };
+		3CD9D06223170D810092A18C /* MinefieldSquareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9D06123170D810092A18C /* MinefieldSquareCell.swift */; };
+		3CD9D06423170E500092A18C /* Style+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9D06323170E500092A18C /* Style+Color.swift */; };
+		3CD9D068231737AC0092A18C /* CanDebugCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD9D067231737AC0092A18C /* CanDebugCollectionView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +44,12 @@
 		3CD9D0542316B7610092A18C /* MinesweeperUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MinesweeperUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CD9D0562316B7610092A18C /* MinesweeperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinesweeperUnitTests.swift; sourceTree = "<group>"; };
 		3CD9D0582316B7610092A18C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3CD9D05F23170AF80092A18C /* MinesweeperCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinesweeperCollectionView.swift; sourceTree = "<group>"; };
+		3CD9D06123170D810092A18C /* MinefieldSquareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinefieldSquareCell.swift; sourceTree = "<group>"; };
+		3CD9D06323170E500092A18C /* Style+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Style+Color.swift"; sourceTree = "<group>"; };
+		3CD9D065231737AB0092A18C /* Minesweeper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Minesweeper-Bridging-Header.h"; sourceTree = "<group>"; };
+		3CD9D066231737AC0092A18C /* CanDebugCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CanDebugCollectionView.h; sourceTree = "<group>"; };
+		3CD9D067231737AC0092A18C /* CanDebugCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanDebugCollectionView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +91,7 @@
 		3C8B948123160C4100719456 /* Minesweeper */ = {
 			isa = PBXGroup;
 			children = (
+				3CD9D05E23170ABD0092A18C /* MinefieldViews */,
 				3C8B948223160C4100719456 /* AppDelegate.swift */,
 				3C8B948423160C4100719456 /* SceneDelegate.swift */,
 				3C8B948623160C4100719456 /* MineSweeperView.swift */,
@@ -108,6 +119,19 @@
 				3CD9D0582316B7610092A18C /* Info.plist */,
 			);
 			path = MinesweeperUnitTests;
+			sourceTree = "<group>";
+		};
+		3CD9D05E23170ABD0092A18C /* MinefieldViews */ = {
+			isa = PBXGroup;
+			children = (
+				3CD9D05F23170AF80092A18C /* MinesweeperCollectionView.swift */,
+				3CD9D06123170D810092A18C /* MinefieldSquareCell.swift */,
+				3CD9D06323170E500092A18C /* Style+Color.swift */,
+				3CD9D066231737AC0092A18C /* CanDebugCollectionView.h */,
+				3CD9D067231737AC0092A18C /* CanDebugCollectionView.m */,
+				3CD9D065231737AB0092A18C /* Minesweeper-Bridging-Header.h */,
+			);
+			path = MinefieldViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,6 +184,7 @@
 				TargetAttributes = {
 					3C8B947E23160C4100719456 = {
 						CreatedOnToolsVersion = 11.0;
+						LastSwiftMigration = 1100;
 					};
 					3CD9D0532316B7610092A18C = {
 						CreatedOnToolsVersion = 11.0;
@@ -212,8 +237,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C8B949723160C5A00719456 /* Minesweeper.swift in Sources */,
+				3CD9D06423170E500092A18C /* Style+Color.swift in Sources */,
 				3C8B948323160C4100719456 /* AppDelegate.swift in Sources */,
+				3CD9D068231737AC0092A18C /* CanDebugCollectionView.m in Sources */,
+				3CD9D06223170D810092A18C /* MinefieldSquareCell.swift in Sources */,
 				3C8B948523160C4100719456 /* SceneDelegate.swift in Sources */,
+				3CD9D06023170AF80092A18C /* MinesweeperCollectionView.swift in Sources */,
 				3C8B948723160C4100719456 /* MineSweeperView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -366,6 +395,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Minesweeper/Preview Content\"";
 				DEVELOPMENT_TEAM = BDB4XSJTE3;
@@ -377,6 +407,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.paulwoodiii.Minesweeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Minesweeper/MinefieldViews/Minesweeper-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -386,6 +418,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Minesweeper/Preview Content\"";
 				DEVELOPMENT_TEAM = BDB4XSJTE3;
@@ -397,6 +430,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.paulwoodiii.Minesweeper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Minesweeper/MinefieldViews/Minesweeper-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

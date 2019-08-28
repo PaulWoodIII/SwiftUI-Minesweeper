@@ -11,6 +11,11 @@ import Combine
 public class Minesweeper: ObservableObject {
   
   @Published var board = Board()
+  var boardStream: AnyPublisher<Board, Never> {
+    get {
+      return self.$board.share().eraseToAnyPublisher()
+    }
+  }
   
   public private(set) var rows: Int = 10 {
     didSet {
@@ -46,6 +51,10 @@ public class Minesweeper: ObservableObject {
     }
   }
   
+  public func onSelect(row: Int, col: Int){
+    self.onSelect(self.board[row, col])
+  }
+  
   public func onSelect(_ square: Square) {
     var next = self.board[square.x, square.y]
     if flagMode {
@@ -59,10 +68,9 @@ public class Minesweeper: ObservableObject {
         reveal(from: square)
       }
     }
-    if flaggedCount == mines {
-      checkForWin()
-    }
     self.board[square.x, square.y] = next
+    checkForFlagWin()
+    checkForClickedAllWin()
   }
   
   public func resize() {
@@ -74,12 +82,13 @@ public class Minesweeper: ObservableObject {
     gameState = .playing
     flaggedCount = 0
     flagMode = false
-    board = Board(board.rows, board.cols)
-    board.setMines(mines)
-    board.setAdjacents()
+    var nextBoard = Board(board.rows, board.cols)
+    nextBoard.setMines(mines)
+    nextBoard.setAdjacents()
+    self.board = nextBoard
   }
   
-  private func checkForWin() {
+  private func checkForFlagWin() {
     var minesFlaggedCorrectly: Int = 0
     for square in board {
       if square.isMined && square.flagged  {
@@ -91,20 +100,32 @@ public class Minesweeper: ObservableObject {
     }
   }
   
+  private func checkForClickedAllWin() {
+    var isRevealedCount = 0
+    for square in board {
+      if square.isRevealed {
+        isRevealedCount += 1
+      }
+    }
+    if isRevealedCount == rows * cols - mines {
+      self.gameState = .won
+    }
+  }
+  
   private func reveal(from: Square) {
     var queue = [from]
-    var visited = Set<Square>()
+    var visited = Set<Point>()
     while queue.first != nil {
       let next = queue.first!
-      let adjacents = Board.adjacents(next.coordinates)
+      let adjacents = Board.adjacents(next.point)
       adjacents.forEach { (toUpdate) in
-        if toUpdate.0 >= 0 && toUpdate.0 < rows &&
-          toUpdate.1 >= 0 && toUpdate.1 < cols {
-          var square = board[toUpdate.0, toUpdate.1]
-          if !visited.contains(square) {
-            visited.insert(square)
+        if toUpdate.x >= 0 && toUpdate.x < rows &&
+          toUpdate.y >= 0 && toUpdate.y < cols {
+          var square = board[toUpdate.x, toUpdate.y]
+          if !visited.contains(square.point) {
+            visited.insert(square.point)
             square.isRevealed = true
-            board[toUpdate.0, toUpdate.1] = square
+            board[toUpdate.x, toUpdate.y] = square
             if square.adjacent == 0 {
               queue.append(square)
             }
@@ -122,17 +143,22 @@ public class Minesweeper: ObservableObject {
   }
 }
 
-public struct Board: Sequence {
+public struct Board: Sequence, Identifiable {
   private var squares: [Square]
   var rows: Int
   var cols: Int
+  var count: Int {
+    return rows * cols
+  }
+  public var id: UUID = UUID()
+  
   init(_ rows: Int = 10, _ cols: Int = 10) {
     self.rows = rows
     self.cols = cols
     self.squares = Array<Bool>(repeating: true, count: rows*cols).enumerated().map({ arg1 -> Square in
       let (i,_) = arg1
       let c = Board.coordinate(forIndex: i, rows: rows, cols: cols)
-      return Square(x: c.0, y: c.1)
+      return Square(x: c.x, y: c.y)
     })
   }
   
@@ -164,42 +190,35 @@ public struct Board: Sequence {
       let coordinates = coordinate(forIndex: i)
       let adjacents = Board.adjacents(coordinates)
       adjacents.forEach { (toUpdate) in
-        if toUpdate.0 >= 0 && toUpdate.0 < rows &&
-          toUpdate.1 >= 0 && toUpdate.1 < cols {
-          var square = self[toUpdate.0, toUpdate.1]
+        if toUpdate.x >= 0 && toUpdate.x < rows &&
+          toUpdate.y >= 0 && toUpdate.y < cols {
+          var square = self[toUpdate.x, toUpdate.y]
           square.adjacent += 1
-          self[toUpdate.0, toUpdate.1] = square
+          self[toUpdate.x, toUpdate.y] = square
         }
       }
     }
   }
   
-  public static func adjacents(_ coordinates: (Int, Int)) -> [(Int, Int)] {
-    let leadingTop = (coordinates.0 - 1, coordinates.1 - 1)
-    let top = (coordinates.0, coordinates.1 - 1)
-    let trailingTop = (coordinates.0 + 1, coordinates.1 - 1)
-    let leading = (coordinates.0 - 1, coordinates.1)
-    let trailing = (coordinates.0 + 1, coordinates.1)
-    let leadingBottom = (coordinates.0 - 1, coordinates.1 + 1)
-    let bottom = (coordinates.0, coordinates.1 + 1)
-    let trailingBottom = (coordinates.0 + 1, coordinates.1 + 1)
+  /// Actually Used
+  public static func adjacents(_ coordinates: Point) -> [Point] {
+    let leadingTop =     Point(x:coordinates.x - 1, y: coordinates.y - 1)
+    let top =            Point(x:coordinates.x,     y: coordinates.y - 1)
+    let trailingTop =    Point(x:coordinates.x + 1, y: coordinates.y - 1)
+    let leading =        Point(x:coordinates.x - 1, y: coordinates.y    )
+    let trailing =       Point(x:coordinates.x + 1, y: coordinates.y    )
+    let leadingBottom =  Point(x:coordinates.x - 1, y: coordinates.y + 1)
+    let bottom =         Point(x:coordinates.x,     y: coordinates.y + 1)
+    let trailingBottom = Point(x:coordinates.x + 1, y: coordinates.y + 1)
     return [leadingTop, top, trailingTop, leading, trailing, leadingBottom, bottom, trailingBottom]
   }
   
-  public static func adjacentsCompass(_ coordinates: (Int, Int)) -> [(Int, Int)] {
-    let top = (coordinates.0, coordinates.1 - 1)
-    let leading = (coordinates.0 - 1, coordinates.1)
-    let trailing = (coordinates.0 + 1, coordinates.1)
-    let bottom = (coordinates.0, coordinates.1 + 1)
-    return [top, leading, trailing, bottom]
-  }
-  
-  public static func coordinate(forIndex idx: Int, rows: Int, cols: Int) -> (Int, Int) {
+  public static func coordinate(forIndex idx: Int, rows: Int, cols: Int) -> Point {
     precondition(idx < rows * cols)
-    return (idx / rows, idx % rows)
+    return Point(x: idx / rows, y: idx % rows)
   }
   
-  public func coordinate(forIndex idx: Int) -> (Int, Int) {
+  public func coordinate(forIndex idx: Int) -> Point {
     return Board.coordinate(forIndex: idx, rows: self.rows, cols: self.cols)
   }
   
@@ -213,6 +232,10 @@ public struct Board: Sequence {
   }
 }
 
+public struct Point: Hashable {
+  var x: Int, y: Int
+}
+
 public struct Square: Identifiable, Equatable, Hashable {
   let x: Int
   let y: Int
@@ -222,17 +245,20 @@ public struct Square: Identifiable, Equatable, Hashable {
   var isSelected: Bool = false
   var adjacent: Int = 0
   
-  var coordinates: (Int, Int) {
-    return (x,y)
+  var point: Point {
+    return Point(x: x,y: y)
   }
   
-  public var id: Int {
-    return x*y
-  }
+  public var id: UUID = UUID()
   
   public func hash(into hasher: inout Hasher) {
     hasher.combine(x)
     hasher.combine(y)
+    hasher.combine(isMined)
+    hasher.combine(isRevealed)
+    hasher.combine(flagged)
+    hasher.combine(isSelected)
+    hasher.combine(adjacent)
   }
   
   public static func == (lhs: Square, rhs: Square) -> Bool {
