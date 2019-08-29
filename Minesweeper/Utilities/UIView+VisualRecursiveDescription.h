@@ -1,6 +1,5 @@
 //
-//  CanDebugCollectionView.h
-//  Minesweeper
+//  UIView+VisualRecursiveDescription.h
 //
 //  Created by Paul Wood on 8/28/19.
 //  Copyright © 2019 Paul Wood. All rights reserved.
@@ -11,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CanDebugCollectionView : NSObject
-- (void)debugFrame:(UICollectionView *)collectionView;
+@interface UIView (VisualRecursiveDescription)
++ (NSString * _Nullable)visualRecursiveDescription:(UIView *)collectionView;
 @end
 
 NS_ASSUME_NONNULL_END

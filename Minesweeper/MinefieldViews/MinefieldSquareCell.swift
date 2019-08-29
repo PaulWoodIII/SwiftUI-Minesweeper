@@ -31,6 +31,7 @@ class MinefieldSquareCell: UICollectionViewCell {
       label.textColor = UIColor.colorForAdjacentCount(square.adjacent)
       backgroundColor = UIColor.white
       if square.isMined && !square.flagged {
+        label.isHidden = true
         backgroundColor = UIColor.red
       } else {
         backgroundColor = UIColor(white: 0.95, alpha: 1.0)
@@ -56,7 +57,6 @@ class MinefieldSquareCell: UICollectionViewCell {
 extension MinefieldSquareCell {
   func configure() {
     self.layer.masksToBounds = true
-    self.layer.cornerRadius = 6
     self.layer.borderWidth = 1.0
     self.layer.borderColor = UIColor.white.cgColor
     label.translatesAutoresizingMaskIntoConstraints = false

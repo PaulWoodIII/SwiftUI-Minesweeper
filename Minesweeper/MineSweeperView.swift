@@ -33,19 +33,28 @@ struct MineSweeperView: View {
       GeometryReader { proxy in
         Minefield(dataSource: self.minesweeper, size: proxy.size)
       }.layoutPriority(1)
+            
+      Button(action: minesweeper.toggleFlagMode) {
+        Image(systemName: minesweeper.flagMode ? "flag.fill" : "flag")
+          .font(.largeTitle)
+          .foregroundColor(Color.accentColor)
+          .padding(40)
+        .background(
+          Circle().foregroundColor(Color.accentColor.opacity(0.5))
+        )
+      }
       
       Spacer()
       
       if !minesweeper.canPlay {
         HStack{
           Text("\(minesweeper.finishedReason)")
+            .font(.title)
         }
       }
       HStack {
         Text("Mines: \( max(0, (minesweeper.mines - minesweeper.flaggedCount)))")
-        Toggle(isOn: minesweeper.toggleFlagMode) {
-          Text("Flag Mode")
-        }
+        Spacer()
         Button(action: minesweeper.reset) {
           Text("Reset")
             .foregroundColor(Color.accentColor)

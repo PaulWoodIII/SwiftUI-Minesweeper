@@ -72,6 +72,9 @@ class MinefieldCoordinator: NSObject, UICollectionViewDelegate {
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    #if DEBUG
+    print(collectionView.visualRecursiveDescription ?? "Description Not Available")
+    #endif
     dataSource.onSelect(row: indexPath.section, col: indexPath.row)
   }
 }

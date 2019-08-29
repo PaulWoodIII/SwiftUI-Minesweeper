@@ -11,6 +11,7 @@ import Combine
 public class Minesweeper: ObservableObject {
   
   @Published var board = Board()
+  @Published var update: Int = 0
   var boardStream: AnyPublisher<Board, Never> {
     get {
       return self.$board.share().eraseToAnyPublisher()
@@ -27,6 +28,7 @@ public class Minesweeper: ObservableObject {
       resize()
     }
   }
+  
   public private(set) var mines: Int = 10
   public private(set) var flaggedCount: Int = 0
   public private(set) var flagMode: Bool = false
@@ -51,6 +53,11 @@ public class Minesweeper: ObservableObject {
     }
   }
   
+  public func toggleFlagMode() {
+    update += 1
+    flagMode.toggle()
+  }
+  
   public func onSelect(row: Int, col: Int){
     self.onSelect(self.board[row, col])
   }
@@ -59,9 +66,16 @@ public class Minesweeper: ObservableObject {
     var next = self.board[square.x, square.y]
     if flagMode {
       next.flagged.toggle()
-      flaggedCount += 1
+      if next.flagged {
+        flaggedCount += 1
+      } else {
+        flaggedCount -= 1
+      }
     } else {
       next.isRevealed = true
+      if next.flagged {
+        next.flagged = false
+      }
       if next.isMined {
         gameState = .lost(square)
       } else if next.adjacent == 0 {
@@ -125,6 +139,9 @@ public class Minesweeper: ObservableObject {
           if !visited.contains(square.point) {
             visited.insert(square.point)
             square.isRevealed = true
+            if square.flagged == true {
+              square.flagged = false
+            }
             board[toUpdate.x, toUpdate.y] = square
             if square.adjacent == 0 {
               queue.append(square)
@@ -136,7 +153,7 @@ public class Minesweeper: ObservableObject {
     }
   }
   
-  public init(_ rows: Int = 10, _ cols: Int = 10) {
+  public init(_ rows: Int = 40, _ cols: Int = 40) {
     self.rows = rows
     self.cols = cols
     self.board = Board(rows,cols)
@@ -280,7 +297,7 @@ public enum GameState {
 import SwiftUI
 
 extension Minesweeper {
-  var toggleFlagMode: Binding<Bool> {
+  var toggleFlagModeBinding: Binding<Bool> {
     return Binding<Bool>(get: {
       return self.flagMode
     }, set: { (nextValue) in
