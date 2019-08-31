@@ -33,6 +33,18 @@ public class Minesweeper: ObservableObject {
   public private(set) var flaggedCount: Int = 0
   public private(set) var flagMode: Bool = false
   public private(set) var gameState: GameState = .playing
+  public var difficultyLevel: DifficultyLevel = .easy {
+    didSet{
+      resize()
+    }
+  }
+  
+  public var allowFlags: Bool  = true {
+    didSet {
+      update += 1
+    }
+  }
+  
   public var canPlay: Bool {
     switch gameState {
     case .playing:
@@ -54,6 +66,9 @@ public class Minesweeper: ObservableObject {
   }
   
   public func toggleFlagMode() {
+    if !canPlay {
+      return
+    }
     update += 1
     flagMode.toggle()
   }
@@ -63,6 +78,9 @@ public class Minesweeper: ObservableObject {
   }
   
   public func onSelect(_ square: Square) {
+    if !canPlay {
+      return
+    }
     var next = self.board[square.x, square.y]
     if flagMode {
       next.flagged.toggle()
@@ -88,7 +106,7 @@ public class Minesweeper: ObservableObject {
   }
   
   public func resize() {
-    self.mines = Int(Double(rows * cols) * 0.15)
+    self.mines = Int(Double(rows * cols) * self.difficultyLevel.minedPercentage)
     reset()
   }
   
@@ -156,6 +174,7 @@ public class Minesweeper: ObservableObject {
   public init(_ rows: Int = 40, _ cols: Int = 40) {
     self.rows = rows
     self.cols = cols
+    self.mines = Int(Double(rows * cols) * self.difficultyLevel.minedPercentage)
     self.board = Board(rows,cols)
   }
 }
@@ -294,6 +313,38 @@ public enum GameState {
   case lost(_ square: Square)
 }
 
+public enum DifficultyLevel: Int, CaseIterable, Identifiable {
+  case easy = 0
+  case medium = 1
+  case hard = 2
+  
+  var displayString: String {
+    switch self {
+    case .easy:
+      return "Easy"
+    case .medium:
+      return "Medium"
+    case .hard:
+      return "Hard"
+    }
+  }
+  
+  public var minedPercentage: Double {
+    switch self {
+    case .easy:
+      return 0.15
+     case .medium:
+      return 0.25
+    case .hard:
+      return 0.35
+    }
+  }
+  
+  public var id: Int {
+    return self.rawValue
+  }
+}
+
 import SwiftUI
 
 extension Minesweeper {
@@ -318,6 +369,22 @@ extension Minesweeper {
       return self.cols
     }, set: {
       self.cols = $0
+    })
+  }
+  
+  var difficultyLevelBinding: Binding<Int> {
+    return Binding<Int>( get: {
+      return self.difficultyLevel.rawValue
+    }, set: { nextValue in
+      self.difficultyLevel = DifficultyLevel(rawValue: nextValue) ?? .easy
+    })
+  }
+  
+  var allowFlagsBinding: Binding<Bool> {
+    return Binding<Bool> ( get: {
+      return self.allowFlags
+    }, set: { nextValue in
+      self.allowFlags = nextValue
     })
   }
 }

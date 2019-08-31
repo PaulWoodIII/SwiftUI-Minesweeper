@@ -22,8 +22,8 @@ class MinesweeperUnitTests: XCTestCase {
   func testCoordinateMath() {
     let board = Board(10,10)
     let coordinate = board.coordinate(forIndex: 1)
-    XCTAssertEqual(coordinate.0, 0)
-    XCTAssertEqual(coordinate.1, 1)
+    XCTAssertEqual(coordinate.x, 0)
+    XCTAssertEqual(coordinate.y, 1)
   }
   
   func test1Example() {

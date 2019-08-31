@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C26E80A231AB89F00EA26E4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C26E809231AB89F00EA26E4 /* SettingsView.swift */; };
+		3C6D3EF3231945AD00C62C31 /* MinefieldLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6D3EF2231945AD00C62C31 /* MinefieldLayout.swift */; };
 		3C8B948323160C4100719456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B948223160C4100719456 /* AppDelegate.swift */; };
 		3C8B948523160C4100719456 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B948423160C4100719456 /* SceneDelegate.swift */; };
 		3C8B948723160C4100719456 /* MineSweeperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B948623160C4100719456 /* MineSweeperView.swift */; };
@@ -33,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C26E809231AB89F00EA26E4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3C6D3EF2231945AD00C62C31 /* MinefieldLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinefieldLayout.swift; sourceTree = "<group>"; };
 		3C8B947F23160C4100719456 /* Minesweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Minesweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C8B948223160C4100719456 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C8B948423160C4100719456 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 				3C8B948423160C4100719456 /* SceneDelegate.swift */,
 				3C8B948623160C4100719456 /* MineSweeperView.swift */,
 				3C8B949623160C5A00719456 /* Minesweeper.swift */,
+				3C26E809231AB89F00EA26E4 /* SettingsView.swift */,
 				3CD9D065231737AB0092A18C /* Minesweeper-Bridging-Header.h */,
 				3C8B948823160C4200719456 /* Assets.xcassets */,
 				3C8B948D23160C4200719456 /* LaunchScreen.storyboard */,
@@ -131,6 +136,7 @@
 				3CD9D05F23170AF80092A18C /* MinesweeperCollectionView.swift */,
 				3CD9D06123170D810092A18C /* MinefieldSquareCell.swift */,
 				3CD9D06323170E500092A18C /* Style+Color.swift */,
+				3C6D3EF2231945AD00C62C31 /* MinefieldLayout.swift */,
 			);
 			path = MinefieldViews;
 			sourceTree = "<group>";
@@ -247,6 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C6D3EF3231945AD00C62C31 /* MinefieldLayout.swift in Sources */,
 				3C8B949723160C5A00719456 /* Minesweeper.swift in Sources */,
 				3CD9D06423170E500092A18C /* Style+Color.swift in Sources */,
 				3C8B948323160C4100719456 /* AppDelegate.swift in Sources */,
@@ -256,6 +263,7 @@
 				3CD9D06023170AF80092A18C /* MinesweeperCollectionView.swift in Sources */,
 				3CE89DE5231830D000C59794 /* UIView+VisualRecursiveDescription.swift in Sources */,
 				3C8B948723160C4100719456 /* MineSweeperView.swift in Sources */,
+				3C26E80A231AB89F00EA26E4 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

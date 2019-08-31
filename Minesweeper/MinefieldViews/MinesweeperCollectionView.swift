@@ -72,9 +72,6 @@ class MinefieldCoordinator: NSObject, UICollectionViewDelegate {
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    #if DEBUG
-    print(collectionView.visualRecursiveDescription ?? "Description Not Available")
-    #endif
     dataSource.onSelect(row: indexPath.section, col: indexPath.row)
   }
 }
@@ -85,7 +82,7 @@ struct Minefield: UIViewRepresentable {
   var size: CGSize
   
   func makeUIView(context: UIViewRepresentableContext<Minefield>) -> UICollectionView {
-    let layout = context.coordinator.createLayout(size: dataSource.board.rows)
+    let layout = context.coordinator.createLayout(rows: dataSource.board.rows, cols: dataSource.board.cols)
     let min = CGFloat.minimum(self.size.width, self.size.height)
     let squareSize = CGSize(width: min, height: min)
     let collectionView =
@@ -112,21 +109,27 @@ struct Minefield: UIViewRepresentable {
 }
 
 extension MinefieldCoordinator {
-  fileprivate func createLayout(size: Int) -> UICollectionViewLayout {
-    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0/CGFloat(size)),
-                                          heightDimension: .fractionalWidth(1.0/CGFloat(size)))
-    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+  fileprivate func createLayout(rows: Int, cols: Int) -> UICollectionViewLayout {
     
-    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                           heightDimension: .fractionalWidth(1.0/CGFloat(size)))
-    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                   subitems: [item])
-    let spacing = CGFloat(0)
-    group.interItemSpacing = .fixed(spacing)
-    
-    let section = NSCollectionLayoutSection(group: group)
-    
-    let layout = UICollectionViewCompositionalLayout(section: section)
-    return layout
+    if rows > 10 || cols > 15 {
+      return MinefieldLayout(rows: rows, cols: cols)
+    }
+    else {
+      let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0/CGFloat(cols)),
+                                            heightDimension: .fractionalWidth(1.0/CGFloat(cols)))
+      let item = NSCollectionLayoutItem(layoutSize: itemSize)
+      
+      let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                             heightDimension: .fractionalWidth(1.0/CGFloat(cols)))
+      let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                     subitems: [item])
+      let spacing = CGFloat(0)
+      group.interItemSpacing = .fixed(spacing)
+      
+      let section = NSCollectionLayoutSection(group: group)
+      
+      let layout = UICollectionViewCompositionalLayout(section: section)
+      return layout
+    }
   }
 }
