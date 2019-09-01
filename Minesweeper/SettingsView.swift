@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import MinesweeperGameplay
 
 struct SettingsView: View {
   

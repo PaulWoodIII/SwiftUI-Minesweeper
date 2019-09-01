@@ -10,9 +10,9 @@ import Foundation
 import Combine
 public class Minesweeper: ObservableObject {
   
-  @Published var board = Board()
-  @Published var update: Int = 0
-  var boardStream: AnyPublisher<Board, Never> {
+  @Published public var board = Board()
+  @Published public var update: Int = 0
+  public var boardStream: AnyPublisher<Board, Never> {
     get {
       return self.$board.share().eraseToAnyPublisher()
     }
@@ -181,14 +181,14 @@ public class Minesweeper: ObservableObject {
 
 public struct Board: Sequence, Identifiable {
   private var squares: [Square]
-  var rows: Int
-  var cols: Int
-  var count: Int {
+  public var rows: Int
+  public var cols: Int
+  public var count: Int {
     return rows * cols
   }
   public var id: UUID = UUID()
   
-  init(_ rows: Int = 10, _ cols: Int = 10) {
+  public init(_ rows: Int = 10, _ cols: Int = 10) {
     self.rows = rows
     self.cols = cols
     self.squares = Array<Bool>(repeating: true, count: rows*cols).enumerated().map({ arg1 -> Square in
@@ -202,7 +202,7 @@ public struct Board: Sequence, Identifiable {
     return squares.makeIterator()
   }
   
-  mutating func setMines(_ minecount: Int) {
+  public mutating func setMines(_ minecount: Int) {
     var randomSelection = Array<Bool>(repeating: false, count: rows*cols - minecount )
     randomSelection += Array<Bool>(repeating: true, count: minecount)
     randomSelection.shuffle()
@@ -215,7 +215,7 @@ public struct Board: Sequence, Identifiable {
     }
   }
   
-  mutating func setAdjacents() {
+  public mutating func setAdjacents() {
     let mines = self.squares.enumerated().reduce(into: [Int]()) { (result, arg1) in
       let (i, square) = arg1
       if square.isMined {
@@ -258,7 +258,7 @@ public struct Board: Sequence, Identifiable {
     return Board.coordinate(forIndex: idx, rows: self.rows, cols: self.cols)
   }
   
-  subscript(x: Int, y: Int) -> Square {
+  public subscript(x: Int, y: Int) -> Square {
     get {
       return squares[cols * x + y]
     }
@@ -269,23 +269,41 @@ public struct Board: Sequence, Identifiable {
 }
 
 public struct Point: Hashable {
-  var x: Int, y: Int
+  public var x: Int, y: Int
 }
 
 public struct Square: Identifiable, Equatable, Hashable {
-  let x: Int
-  let y: Int
-  var isMined: Bool = false
-  var isRevealed: Bool = false
-  var flagged: Bool = false
-  var isSelected: Bool = false
-  var adjacent: Int = 0
+  public let x: Int
+  public let y: Int
+  public var isMined: Bool = false
+  public var isRevealed: Bool = false
+  public var flagged: Bool = false
+  public var isSelected: Bool = false
+  public var adjacent: Int = 0
+  public var id: UUID = UUID()
+
+  public init(
+    x: Int,
+    y: Int,
+    isMined: Bool = false,
+    isRevealed: Bool = false,
+    flagged: Bool = false,
+    isSelected: Bool = false,
+    adjacent: Int = 0
+  ) {
+    self.x = x
+    self.y = y
+    self.isMined = isMined
+    self.isRevealed = isRevealed
+    self.flagged = flagged
+    self.isSelected = isSelected
+    self.adjacent = adjacent
+  }
   
-  var point: Point {
+  public var point: Point {
     return Point(x: x,y: y)
   }
   
-  public var id: UUID = UUID()
   
   public func hash(into hasher: inout Hasher) {
     hasher.combine(x)
@@ -318,7 +336,7 @@ public enum DifficultyLevel: Int, CaseIterable, Identifiable {
   case medium = 1
   case hard = 2
   
-  var displayString: String {
+  public var displayString: String {
     switch self {
     case .easy:
       return "Easy"
@@ -333,7 +351,7 @@ public enum DifficultyLevel: Int, CaseIterable, Identifiable {
     switch self {
     case .easy:
       return 0.15
-     case .medium:
+    case .medium:
       return 0.25
     case .hard:
       return 0.35
@@ -347,7 +365,7 @@ public enum DifficultyLevel: Int, CaseIterable, Identifiable {
 
 import SwiftUI
 
-extension Minesweeper {
+public extension Minesweeper {
   var toggleFlagModeBinding: Binding<Bool> {
     return Binding<Bool>(get: {
       return self.flagMode
