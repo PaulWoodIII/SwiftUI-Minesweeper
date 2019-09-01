@@ -191,7 +191,6 @@
 				3C8B948223160C4100719456 /* AppDelegate.swift */,
 				3C8B948423160C4100719456 /* SceneDelegate.swift */,
 				3C26E809231AB89F00EA26E4 /* SettingsView.swift */,
-				3C4D71A8231B3255008C5847 /* Pulse.swift */,
 				3CD9D065231737AB0092A18C /* Minesweeper-Bridging-Header.h */,
 				3C8B948823160C4200719456 /* Assets.xcassets */,
 				3C8B948D23160C4200719456 /* LaunchScreen.storyboard */,
@@ -234,6 +233,7 @@
 		3CE89DE62318441100C59794 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				3C4D71A8231B3255008C5847 /* Pulse.swift */,
 				3CD9D066231737AC0092A18C /* UIView+VisualRecursiveDescription.h */,
 				3CD9D067231737AC0092A18C /* UIView+VisualRecursiveDescription.m */,
 				3CE89DE4231830D000C59794 /* UIView+VisualRecursiveDescription.swift */,
