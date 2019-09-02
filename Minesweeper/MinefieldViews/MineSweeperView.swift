@@ -12,12 +12,7 @@ import MinesweeperGameplay
 
 struct MineSweeperContainer: View {
   
-  @ObservedObject var minesweeper: Minesweeper = {
-    let m = Minesweeper()
-    m.board.setMines(10)
-    m.board.setAdjacents()
-    return m
-  }()
+  @ObservedObject var minesweeper: Minesweeper = Minesweeper()
   
   var body: some View {
     NavigationView{

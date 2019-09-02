@@ -28,7 +28,7 @@ struct Minefield: View {
           }
         }
       }
-    }
+    }.padding()
   }
 }
 

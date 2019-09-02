@@ -19,12 +19,12 @@ struct MinesweeperCell: View {
   var body : some View {
     ZStack {
       Rectangle()
-        .frame(width: size.width/CGFloat(cellsPerRow), height: size.width/CGFloat(cellsPerRow), alignment: .center)
+        .aspectRatio(1.0, contentMode: .fit)
+        .frame(minWidth: 20, idealWidth: 44, maxWidth: 44, minHeight: 20, idealHeight: 44, maxHeight: 44, alignment: .center)
+        //.frame(width: size.width/CGFloat(cellsPerRow), height: size.width/CGFloat(cellsPerRow), alignment: .center)
         .foregroundColor(color(square: square))
         .aspectRatio(1.0, contentMode: .fit)
-        .onTapGesture {
-          self.onSelect(self.square)
-      }
+        
       if square.isRevealed {
         if square.isMined {
 
@@ -32,6 +32,13 @@ struct MinesweeperCell: View {
         Text("\(square.adjacent)")
           .foregroundColor(Color.colorForAdjacentCount(square.adjacent))
       }
+      
+      if square.flagged {
+        Image(systemName:"flag")
+      }
+      
+    }.onTapGesture {
+        self.onSelect(self.square)
     }.layoutPriority(1)
   }
   

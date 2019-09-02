@@ -8,10 +8,12 @@
 
 import Foundation
 import Combine
+
 public class Minesweeper: ObservableObject {
   
   @Published public var board = Board()
   @Published public var update: Int = 0
+  
   public var boardStream: AnyPublisher<Board, Never> {
     get {
       return self.$board.share().eraseToAnyPublisher()
@@ -28,6 +30,8 @@ public class Minesweeper: ObservableObject {
       resize()
     }
   }
+  
+  public var rng = SystemRandomNumberGenerator()
   
   public private(set) var mines: Int = 10
   public private(set) var flaggedCount: Int = 0
@@ -65,6 +69,14 @@ public class Minesweeper: ObservableObject {
     }
   }
   
+  public init(_ rows: Int = 10, _ cols: Int = 10) {
+    self.rows = rows
+    self.cols = cols
+    resize()
+    self.board = Board(rows, cols)
+    createMines()
+  }
+  
   public func toggleFlagMode() {
     if !canPlay {
       return
@@ -90,14 +102,16 @@ public class Minesweeper: ObservableObject {
         flaggedCount -= 1
       }
     } else {
-      next.isRevealed = true
       if next.flagged {
-        next.flagged = false
-      }
-      if next.isMined {
+        //skip
+      } else if next.isMined {
+        next.isRevealed = true
         gameState = .lost(square)
       } else if next.adjacent == 0 {
+        next.isRevealed = true
         reveal(from: square)
+      } else {
+        next.isRevealed = true
       }
     }
     self.board[square.x, square.y] = next
@@ -114,32 +128,34 @@ public class Minesweeper: ObservableObject {
     gameState = .playing
     flaggedCount = 0
     flagMode = false
-    var nextBoard = Board(board.rows, board.cols)
-    nextBoard.setMines(mines)
-    nextBoard.setAdjacents()
-    self.board = nextBoard
+    self.board = Board(rows, cols)
+    createMines()
   }
   
   private func checkForFlagWin() {
     var minesFlaggedCorrectly: Int = 0
+    var minesFlaggedIncorrectly: Int = 0
     for square in board {
       if square.isMined && square.flagged  {
         minesFlaggedCorrectly += 1
       }
+      if square.flagged && !square.isMined {
+        minesFlaggedIncorrectly += 1
+      }
     }
-    if minesFlaggedCorrectly == mines {
+    if minesFlaggedCorrectly == mines && minesFlaggedIncorrectly == 0 {
       self.gameState = .won
     }
   }
   
   private func checkForClickedAllWin() {
-    var isRevealedCount = 0
+    var correctCount = 0
     for square in board {
-      if square.isRevealed {
-        isRevealedCount += 1
+      if (square.isRevealed || square.flagged) && !square.isMined {
+        correctCount += 1
       }
     }
-    if isRevealedCount == rows * cols - mines {
+    if correctCount == rows * cols - mines {
       self.gameState = .won
     }
   }
@@ -149,7 +165,7 @@ public class Minesweeper: ObservableObject {
     var visited = Set<Point>()
     while queue.first != nil {
       let next = queue.first!
-      let adjacents = Board.adjacents(next.point)
+      let adjacents = Point.adjacents(next.point)
       adjacents.forEach { (toUpdate) in
         if toUpdate.x >= 0 && toUpdate.x < rows &&
           toUpdate.y >= 0 && toUpdate.y < cols {
@@ -171,152 +187,18 @@ public class Minesweeper: ObservableObject {
     }
   }
   
-  public init(_ rows: Int = 40, _ cols: Int = 40) {
-    self.rows = rows
-    self.cols = cols
-    self.mines = Int(Double(rows * cols) * self.difficultyLevel.minedPercentage)
-    self.board = Board(rows,cols)
-  }
-}
-
-public struct Board: Sequence, Identifiable {
-  private var squares: [Square]
-  public var rows: Int
-  public var cols: Int
-  public var count: Int {
-    return rows * cols
-  }
-  public var id: UUID = UUID()
-  
-  public init(_ rows: Int = 10, _ cols: Int = 10) {
-    self.rows = rows
-    self.cols = cols
-    self.squares = Array<Bool>(repeating: true, count: rows*cols).enumerated().map({ arg1 -> Square in
-      let (i,_) = arg1
-      let c = Board.coordinate(forIndex: i, rows: rows, cols: cols)
-      return Square(x: c.x, y: c.y)
-    })
-  }
-  
-  public func makeIterator() -> IndexingIterator<[Square]> {
-    return squares.makeIterator()
-  }
-  
-  public mutating func setMines(_ minecount: Int) {
-    var randomSelection = Array<Bool>(repeating: false, count: rows*cols - minecount )
-    randomSelection += Array<Bool>(repeating: true, count: minecount)
-    randomSelection.shuffle()
-    randomSelection.enumerated().forEach { (i, hasMine) in
+  /// Array of Mine Locations
+  public func createMines() {
+    var randomSelection = Array<Bool>(repeating: false, count: rows*cols - mines)
+    randomSelection += Array<Bool>(repeating: true, count: mines)
+    randomSelection.shuffle(using: &rng)
+    let randomIndexes: [Int] = randomSelection.enumerated().compactMap{ (index, hasMine) in
       if hasMine {
-        var square = squares[i]
-        square.isMined = true
-        squares[i] = square
+        return index
       }
+      return nil
     }
-  }
-  
-  public mutating func setAdjacents() {
-    let mines = self.squares.enumerated().reduce(into: [Int]()) { (result, arg1) in
-      let (i, square) = arg1
-      if square.isMined {
-        result.append(i)
-      }
-    }
-    mines.forEach { i in
-      let coordinates = coordinate(forIndex: i)
-      let adjacents = Board.adjacents(coordinates)
-      adjacents.forEach { (toUpdate) in
-        if toUpdate.x >= 0 && toUpdate.x < rows &&
-          toUpdate.y >= 0 && toUpdate.y < cols {
-          var square = self[toUpdate.x, toUpdate.y]
-          square.adjacent += 1
-          self[toUpdate.x, toUpdate.y] = square
-        }
-      }
-    }
-  }
-  
-  /// Actually Used
-  public static func adjacents(_ coordinates: Point) -> [Point] {
-    let leadingTop =     Point(x:coordinates.x - 1, y: coordinates.y - 1)
-    let top =            Point(x:coordinates.x,     y: coordinates.y - 1)
-    let trailingTop =    Point(x:coordinates.x + 1, y: coordinates.y - 1)
-    let leading =        Point(x:coordinates.x - 1, y: coordinates.y    )
-    let trailing =       Point(x:coordinates.x + 1, y: coordinates.y    )
-    let leadingBottom =  Point(x:coordinates.x - 1, y: coordinates.y + 1)
-    let bottom =         Point(x:coordinates.x,     y: coordinates.y + 1)
-    let trailingBottom = Point(x:coordinates.x + 1, y: coordinates.y + 1)
-    return [leadingTop, top, trailingTop, leading, trailing, leadingBottom, bottom, trailingBottom]
-  }
-  
-  public static func coordinate(forIndex idx: Int, rows: Int, cols: Int) -> Point {
-    precondition(idx < rows * cols)
-    return Point(x: idx / rows, y: idx % rows)
-  }
-  
-  public func coordinate(forIndex idx: Int) -> Point {
-    return Board.coordinate(forIndex: idx, rows: self.rows, cols: self.cols)
-  }
-  
-  public subscript(x: Int, y: Int) -> Square {
-    get {
-      return squares[cols * x + y]
-    }
-    set {
-      squares[cols * x + y] = newValue
-    }
-  }
-}
-
-public struct Point: Hashable {
-  public var x: Int, y: Int
-}
-
-public struct Square: Identifiable, Equatable, Hashable {
-  public let x: Int
-  public let y: Int
-  public var isMined: Bool = false
-  public var isRevealed: Bool = false
-  public var flagged: Bool = false
-  public var isSelected: Bool = false
-  public var adjacent: Int = 0
-  public var id: UUID = UUID()
-
-  public init(
-    x: Int,
-    y: Int,
-    isMined: Bool = false,
-    isRevealed: Bool = false,
-    flagged: Bool = false,
-    isSelected: Bool = false,
-    adjacent: Int = 0
-  ) {
-    self.x = x
-    self.y = y
-    self.isMined = isMined
-    self.isRevealed = isRevealed
-    self.flagged = flagged
-    self.isSelected = isSelected
-    self.adjacent = adjacent
-  }
-  
-  public var point: Point {
-    return Point(x: x,y: y)
-  }
-  
-  
-  public func hash(into hasher: inout Hasher) {
-    hasher.combine(x)
-    hasher.combine(y)
-    hasher.combine(isMined)
-    hasher.combine(isRevealed)
-    hasher.combine(flagged)
-    hasher.combine(isSelected)
-    hasher.combine(adjacent)
-  }
-  
-  public static func == (lhs: Square, rhs: Square) -> Bool {
-    return lhs.x == rhs.x && lhs.y == rhs.y
+    self.board = board.setMines(randomIndexes)
   }
 }
 
@@ -325,44 +207,13 @@ public enum Reveal {
   case flagged
 }
 
-public enum GameState {
+public enum GameState: Equatable {
   case playing
   case won
   case lost(_ square: Square)
 }
 
-public enum DifficultyLevel: Int, CaseIterable, Identifiable {
-  case easy = 0
-  case medium = 1
-  case hard = 2
-  
-  public var displayString: String {
-    switch self {
-    case .easy:
-      return "Easy"
-    case .medium:
-      return "Medium"
-    case .hard:
-      return "Hard"
-    }
-  }
-  
-  public var minedPercentage: Double {
-    switch self {
-    case .easy:
-      return 0.15
-    case .medium:
-      return 0.25
-    case .hard:
-      return 0.35
-    }
-  }
-  
-  public var id: Int {
-    return self.rawValue
-  }
-}
-
+#if canImport(SwiftUI)
 import SwiftUI
 
 public extension Minesweeper {
@@ -406,3 +257,4 @@ public extension Minesweeper {
     })
   }
 }
+#endif
