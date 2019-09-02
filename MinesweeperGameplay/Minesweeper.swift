@@ -98,19 +98,25 @@ public class Minesweeper: ObservableObject {
       next.flagged.toggle()
       if next.flagged {
         flaggedCount += 1
+        NotificationCenter.default.post(name: Notification.Name.flagOn, object: nil)
       } else {
         flaggedCount -= 1
+        NotificationCenter.default.post(name: Notification.Name.flagOff, object: nil)
       }
     } else {
       if next.flagged {
         //skip
+        
       } else if next.isMined {
         next.isRevealed = true
+        NotificationCenter.default.post(name: Notification.Name.lose, object: nil)
         gameState = .lost(square)
       } else if next.adjacent == 0 {
+        NotificationCenter.default.post(name: Notification.Name.click, object: nil)
         next.isRevealed = true
         reveal(from: square)
       } else {
+        NotificationCenter.default.post(name: Notification.Name.click, object: nil)
         next.isRevealed = true
       }
     }
@@ -130,6 +136,7 @@ public class Minesweeper: ObservableObject {
     flagMode = false
     self.board = Board(rows, cols)
     createMines()
+    NotificationCenter.default.post(name: Notification.Name.restart, object: nil)
   }
   
   private func checkForFlagWin() {
@@ -144,6 +151,7 @@ public class Minesweeper: ObservableObject {
       }
     }
     if minesFlaggedCorrectly == mines && minesFlaggedIncorrectly == 0 {
+      NotificationCenter.default.post(name: Notification.Name.win, object: nil)
       self.gameState = .won
     }
   }
@@ -156,6 +164,7 @@ public class Minesweeper: ObservableObject {
       }
     }
     if correctCount == rows * cols - mines {
+      NotificationCenter.default.post(name: Notification.Name.win, object: nil)
       self.gameState = .won
     }
   }

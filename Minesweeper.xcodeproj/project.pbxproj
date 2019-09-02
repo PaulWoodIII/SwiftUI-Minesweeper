@@ -10,6 +10,13 @@
 		3C0E81DC231BEC2900BACEAE /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E81DB231BEC2900BACEAE /* BoardTests.swift */; };
 		3C0E81DE231BEC3B00BACEAE /* GameplayTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E81DD231BEC3B00BACEAE /* GameplayTest.swift */; };
 		3C0E81E0231C2ED900BACEAE /* PointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E81DF231C2ED900BACEAE /* PointTests.swift */; };
+		3C0E8239231D562100BACEAE /* Sounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E8238231D562100BACEAE /* Sounds.swift */; };
+		3C0E823B231D58F800BACEAE /* click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3C0E823A231D58F800BACEAE /* click.mp3 */; };
+		3C0E823D231D58FD00BACEAE /* flag.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3C0E823C231D58FD00BACEAE /* flag.mp3 */; };
+		3C0E823F231D596F00BACEAE /* GameNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E823E231D596F00BACEAE /* GameNotifications.swift */; };
+		3C0E8243231D684400BACEAE /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3C0E8241231D684400BACEAE /* lose.mp3 */; };
+		3C0E8245231D6B1400BACEAE /* restart.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3C0E8244231D6B1400BACEAE /* restart.mp3 */; };
+		3C0E8247231D7A8C00BACEAE /* win.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3C0E8246231D7A8C00BACEAE /* win.mp3 */; };
 		3C26E80A231AB89F00EA26E4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C26E809231AB89F00EA26E4 /* SettingsView.swift */; };
 		3C4D71A9231B3255008C5847 /* Pulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D71A8231B3255008C5847 /* Pulse.swift */; };
 		3C4D71AB231B3564008C5847 /* MinesweeperCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D71AA231B3564008C5847 /* MinesweeperCell.swift */; };
@@ -86,6 +93,13 @@
 		3C0E81DB231BEC2900BACEAE /* BoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
 		3C0E81DD231BEC3B00BACEAE /* GameplayTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameplayTest.swift; sourceTree = "<group>"; };
 		3C0E81DF231C2ED900BACEAE /* PointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointTests.swift; sourceTree = "<group>"; };
+		3C0E8238231D562100BACEAE /* Sounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sounds.swift; sourceTree = "<group>"; };
+		3C0E823A231D58F800BACEAE /* click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = click.mp3; sourceTree = "<group>"; };
+		3C0E823C231D58FD00BACEAE /* flag.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = flag.mp3; sourceTree = "<group>"; };
+		3C0E823E231D596F00BACEAE /* GameNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameNotifications.swift; sourceTree = "<group>"; };
+		3C0E8241231D684400BACEAE /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
+		3C0E8244231D6B1400BACEAE /* restart.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = restart.mp3; sourceTree = "<group>"; };
+		3C0E8246231D7A8C00BACEAE /* win.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win.mp3; sourceTree = "<group>"; };
 		3C26E809231AB89F00EA26E4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3C4D71A8231B3255008C5847 /* Pulse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pulse.swift; sourceTree = "<group>"; };
 		3C4D71AA231B3564008C5847 /* MinesweeperCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinesweeperCell.swift; sourceTree = "<group>"; };
@@ -154,6 +168,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C0E8237231D560E00BACEAE /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E8238231D562100BACEAE /* Sounds.swift */,
+				3C0E823A231D58F800BACEAE /* click.mp3 */,
+				3C0E823C231D58FD00BACEAE /* flag.mp3 */,
+				3C0E8241231D684400BACEAE /* lose.mp3 */,
+				3C0E8246231D7A8C00BACEAE /* win.mp3 */,
+				3C0E8244231D6B1400BACEAE /* restart.mp3 */,
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
 		3C4D71B8231B3D06008C5847 /* MinesweeperGameplay */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +191,7 @@
 				3C4D71D8231B43F7008C5847 /* Board.swift */,
 				3C4D71DA231B4422008C5847 /* Point.swift */,
 				3C4D71DE231B450B008C5847 /* DifficultyLevel.swift */,
+				3C0E823E231D596F00BACEAE /* GameNotifications.swift */,
 			);
 			path = MinesweeperGameplay;
 			sourceTree = "<group>";
@@ -204,13 +232,14 @@
 		3C8B948123160C4100719456 /* Minesweeper */ = {
 			isa = PBXGroup;
 			children = (
+				3C8B948823160C4200719456 /* Assets.xcassets */,
+				3C0E8237231D560E00BACEAE /* Sound */,
 				3CE89DE62318441100C59794 /* Utilities */,
 				3CD9D05E23170ABD0092A18C /* MinefieldViews */,
 				3C8B948223160C4100719456 /* AppDelegate.swift */,
 				3C8B948423160C4100719456 /* SceneDelegate.swift */,
 				3C26E809231AB89F00EA26E4 /* SettingsView.swift */,
 				3CD9D065231737AB0092A18C /* Minesweeper-Bridging-Header.h */,
-				3C8B948823160C4200719456 /* Assets.xcassets */,
 				3C8B948D23160C4200719456 /* LaunchScreen.storyboard */,
 				3C8B949023160C4200719456 /* Info.plist */,
 				3C8B948A23160C4200719456 /* Preview Content */,
@@ -415,8 +444,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C8B948F23160C4200719456 /* LaunchScreen.storyboard in Resources */,
+				3C0E823D231D58FD00BACEAE /* flag.mp3 in Resources */,
 				3C8B948C23160C4200719456 /* Preview Assets.xcassets in Resources */,
+				3C0E8247231D7A8C00BACEAE /* win.mp3 in Resources */,
+				3C0E8243231D684400BACEAE /* lose.mp3 in Resources */,
 				3C8B948923160C4200719456 /* Assets.xcassets in Resources */,
+				3C0E8245231D6B1400BACEAE /* restart.mp3 in Resources */,
+				3C0E823B231D58F800BACEAE /* click.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +468,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C0E823F231D596F00BACEAE /* GameNotifications.swift in Sources */,
 				3C4D71DB231B4422008C5847 /* Point.swift in Sources */,
 				3C4D71DF231B450B008C5847 /* DifficultyLevel.swift in Sources */,
 				3C4D71D7231B43DD008C5847 /* Square.swift in Sources */,
@@ -460,6 +495,7 @@
 				3CD9D06423170E500092A18C /* Style+Color.swift in Sources */,
 				3C4D71AF231B3640008C5847 /* MinefieldActionBar.swift in Sources */,
 				3C4D71AD231B3601008C5847 /* Minefield.swift in Sources */,
+				3C0E8239231D562100BACEAE /* Sounds.swift in Sources */,
 				3C4D71A9231B3255008C5847 /* Pulse.swift in Sources */,
 				3C8B948323160C4100719456 /* AppDelegate.swift in Sources */,
 				3CD9D068231737AC0092A18C /* UIView+VisualRecursiveDescription.m in Sources */,
